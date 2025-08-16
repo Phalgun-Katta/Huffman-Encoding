@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Huffman Encoding Tool</title>
+</head>
+<body>
+  <h2>Huffman Encoder</h2>
+  <textarea id="inputText" rows="5" cols="50" placeholder="Enter text"></textarea><br><br>
+  <button onclick="encode()">Encode</button>
+
+  <h3>Output:</h3>
+  <p><strong>Encoded:</strong> <span id="encoded"></span></p>
+  <p><strong>Compression:</strong> <span id="compression"></span></p>
+
+  <script>
+    function encode() {
+      let text = document.getElementById("inputText").value;
+      if (!text) return alert("Enter some text!");
+
+      let freq = {};
+      for (let ch of text) {
+        freq[ch] = (freq[ch] || 0) + 1;
+      }
+
+      let sorted = Object.entries(freq).sort((a,b)=>a[1]-b[1]);
+      let code = {};
+      sorted.forEach((item, idx) => {
+        code[item[0]] = idx.toString(2).padStart(2,'0');
+      });
+
+      let encoded = text.split('').map(ch => code[ch]).join('');
+      document.getElementById("encoded").innerText = encoded;
+
+      let originalBits = text.length * 8;
+      let compressedBits = encoded.length;
+      let comp = ((1 - compressedBits / originalBits) * 100).toFixed(2);
+      document.getElementById("compression").innerText = comp + "%";
+    }
+  </script>
+</body>
+</html>
